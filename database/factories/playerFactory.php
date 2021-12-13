@@ -30,7 +30,7 @@ class PlayerFactory extends Factory
 
         for ($i = 0; $i < $server_count; $i++) {
             $server_id = rand(1, 50);
-            while(in_array($server_id, $servers)) {
+            while (in_array($server_id, $servers)) {
                 $server_id = rand(1, 50);
             }
             $server[] = $server_id;
@@ -52,6 +52,12 @@ class PlayerFactory extends Factory
             'rib_str' => Str::random(10),
             'status' => rand(1, 3),
             'type' => rand(1, 2),
+            'username' => $this->faker->userName(),
+            'email' => $this->faker->safeEmail(),
+            'password' => bcrypt('password123'),
+            'pseudo' => $this->faker->userName(),
+            'online' => rand(0, 1),
+            'credit_card' => rand(401000000000000, 4019999999999999),
         ];
     }
 }
