@@ -10,4 +10,6 @@ class player extends Model
 {
     use HasFactory;
     use Billable;
+
+    protected $guarded = ['id'];
 }
