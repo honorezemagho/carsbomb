@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    public function register (Request $request) {
+
+    public const ACCOUNT_WAITING = 0;
+    public function register(Request $request)
+    {
         $validated = $request->validate([
             'lastname' => 'required',
             'firstname' => 'required',
@@ -39,7 +42,7 @@ class RegisterController extends Controller
         $player->country = $request->country;
 
         // upload image
-        // $imageName = time().'.'.$request->image->extension();  
+        // $imageName = time().'.'.$request->image->extension();
         //$request->image->move(public_path('assets/images/players'), $imageName);
         $player->image = 'teste';
         // $player->image = $imageName;
@@ -49,43 +52,44 @@ class RegisterController extends Controller
         $player->compl_adress = $request->compl_adress;
         $player->postal_code = $request->postal_code;
         $player->rib = $request->rib;
-        
+
         $player->parent = $request->parent;
-        $player->status = ACCOUNT_WAITING;
+        $player->status = $this::ACCOUNT_WAITING;
         $player->type = 1;
 
         $player->password = Hash::make($request->pw);
 
         $player->save();
-        
-        $request->session()->put('auth', $player->username);   
+
+        $request->session()->put('auth', $player->username);
 
         return redirect()->route('public.profile');
     }
 
-    public function login (Request $request) { 
+    public function login(Request $request)
+    {
         $validated = $request->validate([
             'identity' => 'required',
             'password' => 'required|min:6',
         ]);
 
         $player = player::where('username', $request->identity)->orWhere('email', $request->identity)->first();
-        
+
         if ($player == null) {
             return 'Aucon compte trouvé';
         }
 
-        if (Hash::check($request->password, $player->password)) {    
-            $request->session()->put('auth', $player->username);    
+        if (Hash::check($request->password, $player->password)) {
+            $request->session()->put('auth', $player->username);
             return redirect()->route('public.profile');
         }
 
         return 'any';
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->session()->forget('auth');
         return redirect()->route('public.login');
     }
-
 }

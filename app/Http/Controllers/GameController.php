@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function play (Request $request) {
+    public function play(Request $request)
+    {
         $player = player::where('username', $request->session()->get('auth'))->first();
 
         $solde = 0;
@@ -37,11 +38,11 @@ class GameController extends Controller
         return view('public.game.play', ['server' => $server]);
     }
 
-    public function start () {
-        
+    public function start()
+    {
     }
 
-    public function stop () {
-
+    public function stop()
+    {
     }
 }

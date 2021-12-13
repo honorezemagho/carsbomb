@@ -17,8 +17,9 @@ use Illuminate\Http\Request;
 
 class PlayerController extends Controller
 {
-    
-    public function all () {
+
+    public function all()
+    {
         $players = player::paginate(12);
         $count = count(player::all());
 
@@ -29,7 +30,7 @@ class PlayerController extends Controller
         $wins = [];
         $looses = [];
         $soldes = [];
-        
+
 
         $used_codes = [];
 
@@ -45,12 +46,12 @@ class PlayerController extends Controller
             $sum_depots = 0;
 
             foreach ($usr_depots as $usr_depot) {
-               $sum_depots += $usr_depot->amount;
-            }   
+                $sum_depots += $usr_depot->amount;
+            }
             $depots[$player->id] = $sum_depots;
 
             $soldes[$player->id] = $depots[$player->id] + $wins[$player->id] - $retraits[$player->id] - $looses[$player->id];
-            
+
             $codes = UsedCodeBomb::where('player', $player->id)->get()->toArray();
             if ($codes == []) {
                 $used_codes[$player->id] = 'Aucun';
@@ -66,14 +67,14 @@ class PlayerController extends Controller
                 $used_codes[$player->id] = $code_exist;
             }
 
-            $childs_arr = player::where('parent', $player->username)->get();   
+            $childs_arr = player::where('parent', $player->username)->get();
 
             $boot_parent = false;
-            
+
             if ($childs_arr == null) {
                 $childs[$player->id] = 'Aucun';
             } else {
-                foreach($childs_arr as $ch) {
+                foreach ($childs_arr as $ch) {
                     if ($this->boot_inscr($childs)) {
                         $boot_parent = true;
                     }
@@ -93,19 +94,23 @@ class PlayerController extends Controller
             }
             //end boots
         }
-        
-        return view('admin.players.all', ['players' => $players, 'count' => $count, 
-                'used_codes' => $used_codes, 'childs' => $childs, 
-                'boot_parents' => $boot_parents, 'boot_inscrs' => $boot_inscrs,
-                'depots' => $depots, 'retraits' => $retraits, 'wins' => $wins, 'looses' => $looses,
-                'soldes' => $soldes]);
+
+        return view('admin.players.all', [
+            'players' => $players, 'count' => $count,
+            'used_codes' => $used_codes, 'childs' => $childs,
+            'boot_parents' => $boot_parents, 'boot_inscrs' => $boot_inscrs,
+            'depots' => $depots, 'retraits' => $retraits, 'wins' => $wins, 'looses' => $looses,
+            'soldes' => $soldes
+        ]);
     }
 
-    private function boot_inscr($player) {
+    private function boot_inscr($player)
+    {
         return  Carbon::parse($player->created_at)->addMonth()->gt(Carbon::now());
     }
 
-    public function destroy ($id) {
+    public function destroy($id)
+    {
         $player = player::findOrFail($id);
 
         $player->delete();
@@ -113,7 +118,8 @@ class PlayerController extends Controller
         return redirect()->back()->with('success', 'Joueur supprimé avec succès');
     }
 
-    public function profile (Request $request) {
+    public function profile(Request $request)
+    {
         $solde = 0;
         $player = player::where('username', $request->session()->get('auth'))->first();
         $onlines = count(player::all());
@@ -124,11 +130,11 @@ class PlayerController extends Controller
         $looses = Play::where('player', $player->id)->sum('amount');
 
         $solde = $depots + $wins - $retraits - $looses;
-            
+
         return view('public.profile.profile', ['player' => $player, 'onlines' => $onlines, 'solde' => $solde]);
     }
 
-    public function account (Request $request)
+    public function account(Request $request)
     {
         $solde = 0;
         $player = player::where('username', $request->session()->get('auth'))->first();
@@ -161,7 +167,8 @@ class PlayerController extends Controller
         return view('public.profile.account', ['hascards' => $hascards, 'player' => $player, 'solde' => $solde, 'depots' => $depots, 'wins' => $wins, 'looses' => $looses, 'used_bombs' => $used_bombs, 'users_created_servers' => $users_created_servers, 'users_servers' => $users_servers]);
     }
 
-    public function edit_profile (Request $request) {
+    public function edit_profile(Request $request)
+    {
         $player = player::where('username', $request->session()->get('auth'))->first();
         return view('public.profile.edit', ['player' => $player]);
     }
@@ -203,25 +210,28 @@ class PlayerController extends Controller
         return redirect()->route('public.profile.account')->with('success', 'Profile modifié avec succès');
     }
 
-    public function validate_account (Request $request) {
+    public function validate_account(Request $request)
+    {
         $player = player::find($request->player);
         $player->status = \ACCOUNT_VALIDATED;
         $player->save();
         return redirect()->back()->with('validated', 'Compte validé avec succès !');
     }
 
-    public function not_validate_account (Request $request) {
+    public function not_validate_account(Request $request)
+    {
         $player = player::find($request->player);
         $player->status = \ACCOUNT_REFUSED;
         $player->save();
         return redirect()->back()->with('validated', 'Compte réfusé avec succès !');
     }
 
-    public function sendCards (Request $request) {
+    public function sendCards(Request $request)
+    {
         $player = player::where('username', $request->session()->get('auth'))->first();
-        
+
         // upload image
-        $imageName1 = time().'.'.$request->card_recto->extension();  
+        $imageName1 = time() . '.' . $request->card_recto->extension();
         $request->card_recto->move(public_path('assets/images/cards'), $imageName1);
 
         $hascard = new HasCards();
@@ -230,10 +240,10 @@ class PlayerController extends Controller
         $hascard->image = $imageName1;
         $hascard->type = 1;
         $hascard->save();
-          
+
 
         // upload image
-        $imageName2 = time().'.'.$request->card_verso->extension();  
+        $imageName2 = time() . '.' . $request->card_verso->extension();
         $request->card_verso->move(public_path('assets/images/cards'), $imageName2);
 
         $hascard2 = new HasCards();
@@ -242,10 +252,10 @@ class PlayerController extends Controller
         $hascard2->image = $imageName2;
         $hascard2->type = 2;
         $hascard2->save();
-        
+
 
         // upload image
-        $imageName3 = time().'.'.$request->rib->extension();  
+        $imageName3 = time() . '.' . $request->rib->extension();
         $request->rib->move(public_path('assets/images/cards'), $imageName3);
 
         $hascard3 = new HasCards();
@@ -255,16 +265,18 @@ class PlayerController extends Controller
         $hascard3->type = 3;
         $hascard3->save();
 
-        return redirect()->back();    
+        return redirect()->back();
     }
 
-    public function has_cards(Request $request) {
+    public function has_cards(Request $request)
+    {
         $player = player::where('username', $request->session()->get('auth'))->first();
         return HasCards::where('player', $player->id)->get() != null;
     }
 
 
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $player = player::where('username', $request->session()->get('auth'))->first();
         $player->delete();
         $request->session()->flush();
@@ -273,7 +285,7 @@ class PlayerController extends Controller
 
     public function card_validation(Request $request)
     {
-        $players = player::where('status', ACCOUNT_WAITING)->get();
+        $players = player::where('status', 0)->get();
         $cards1 = [];
         $cards2 = [];
         $rib = [];

@@ -8,20 +8,22 @@ use Illuminate\Http\Request;
 
 class TransferController extends Controller
 {
-    public function all () {
+    public function all()
+    {
         $transfers = Transfer::paginate(12);
 
         $count = count(Transfer::all());
-        
+
         $players = [];
 
         foreach ($transfers as $trasnfer) {
             $players[$trasnfer->user] = player::find($trasnfer->user);
-        } 
-        return view('admin.transfers.all', ['transfers' => $transfers , 'count' => $count , 'players' => $players]);
+        }
+        return view('admin.transfers.all', ['transfers' => $transfers, 'count' => $count, 'players' => $players]);
     }
 
-    public function destroy ($id) {
+    public function destroy($id)
+    {
         $transfer = Transfer::findOrFail($id);
 
         $transfer->delete();

@@ -11,14 +11,16 @@ use League\CommonMark\Inline\Element\Code;
 
 class CodeBombController extends Controller
 {
-    public function all () {
+    public function all()
+    {
         $codes = CodeBomb::paginate(12);
         $count = count(CodeBomb::all());
 
-        return view('admin.codes.all', ['codes' => $codes , 'count' => $count]);
+        return view('admin.codes.all', ['codes' => $codes, 'count' => $count]);
     }
 
-    public function destroy ($id) {
+    public function destroy($id)
+    {
         $code = CodeBomb::findOrFail($id);
 
         $code->delete();
@@ -26,18 +28,19 @@ class CodeBombController extends Controller
         return redirect('/admin/codebombs')->with('success', 'CodeBomb supprimé avec succès');
     }
 
-    public function edit(Request $request) {
+    public function edit(Request $request)
+    {
         $code = CodeBomb::find($request->id);
         return view('admin.codes.edit', ['code' => $code]);
     }
 
     public function update(Request $request, $id)
-    { 
+    {
         $validatedData = $request->validate([
             'code' => 'required|min:3',
             'value' => 'required|numeric',
             'end' => 'required|date'
-        ]); 
+        ]);
 
 
         $code = CodeBomb::find($id);
@@ -59,17 +62,18 @@ class CodeBombController extends Controller
         return redirect('/admin/codebombs')->with('success', 'Code bomb modifié avec succès');
     }
 
-    public function new () {
+    public function new()
+    {
         return view('admin.codes.new');
     }
 
     public function store(Request $request)
-    { 
+    {
         $validatedData = $request->validate([
             'code' => 'required|min:3',
             'value' => 'required|numeric',
             'end' => 'required|date'
-        ]); 
+        ]);
 
 
         $code = new CodeBomb();
@@ -82,12 +86,13 @@ class CodeBombController extends Controller
         return redirect('/admin/codebombs')->with('success', 'Code bomb créé avec succès');
     }
 
-    public function apply (Request $request) {        
-        
+    public function apply(Request $request)
+    {
+
         $validatedData = $request->validate([
             'code' => 'required',
-        ]); 
-        
+        ]);
+
         $code = $request->code;
         $code_obj = CodeBomb::where('code', $code)->first();
 
@@ -109,7 +114,5 @@ class CodeBombController extends Controller
         }
 
         return redirect()->back()->with('code_error', 'Vous avez déjà utilisé ce code');
-        
     }
-
 }

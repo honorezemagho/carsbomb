@@ -12,20 +12,22 @@ use Illuminate\Http\Request;
 
 class WithdrawalController extends Controller
 {
-    public function all () {
+    public function all()
+    {
         $withdrawals = Withdrawal::paginate(12);
         $count = count(Withdrawal::all());
 
         $players = [];
 
-        foreach($withdrawals as $withdrawal) {
+        foreach ($withdrawals as $withdrawal) {
             $players[$withdrawal->id] = player::find($withdrawal->user);
         }
-        
+
         return view('admin.withdrawals.all', ['withdrawals' => $withdrawals, 'players' => $players, 'count' => $count]);
     }
 
-    public function destroy ($id) {
+    public function destroy($id)
+    {
         $withdrawal = Withdrawal::findOrFail($id);
 
         $withdrawal->delete();
@@ -33,7 +35,8 @@ class WithdrawalController extends Controller
         return redirect('admin/demandesretrait')->with('success', 'Demande de retrait supprimée avec succès');
     }
 
-    public function new (Request $request) {
+    public function new(Request $request)
+    {
         $player = player::where('username', $request->session()->get('auth'))->first();
 
         $depots = Depot::where('player', $player->id)->sum('amount');
@@ -46,7 +49,8 @@ class WithdrawalController extends Controller
         return view('public.withdrawal.new', ['player' => $player, 'solde' => $solde]);
     }
 
-    public function store (Request $request) {
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'amount' => 'required',
         ]);
@@ -76,11 +80,11 @@ class WithdrawalController extends Controller
 
         if ($request->amount > $solde) {
             return redirect()->back()->with('error_withdrawal', 'Vous n\'avez pas assez d\'argent dans votre compte pour effectuer cette demande de retrait');
-        } 
+        }
 
         if ($request->amount < 10) {
             return redirect()->back()->with('Vous ne pouvez pas rétirer moins de 10€');
-        } 
+        }
 
         if ($sum_withdrawals + $request->amount - 10 > $solde) {
             return redirect()->back()->with('error_withdrawal', 'Vos demandes de retrait en cours sont de ' . $sum_withdrawals . '€, Vous ne pouvez donc pas demander un retrai de ' . $request->amount . '€');

@@ -15,7 +15,7 @@ use Omnipay\Omnipay;
 class PaymentController extends Controller
 {
     public $gateway;
-  
+
     public function __construct()
     {
         $this->gateway = Omnipay::create('PayPal_Rest');
@@ -23,7 +23,7 @@ class PaymentController extends Controller
         $this->gateway->setSecret(env('PAYPAL_CLIENT_SECRET'));
         $this->gateway->setTestMode(true); //set it to 'false' when go live
     }
-  
+
     public function index(Request $request)
     {
         $solde = 0;
@@ -39,7 +39,7 @@ class PaymentController extends Controller
 
         return view('payment', ['player' => $player, 'onlines' => $onlines, 'solde' => $solde]);
     }
-  
+
     public function charge(Request $request)
     {
         try {
@@ -50,39 +50,36 @@ class PaymentController extends Controller
                 'returnUrl' => url('paymentsuccess'),
                 'cancelUrl' => url('paymenterror'),
             ])->send();
-            
+
             if ($response->isRedirect()) {
                 $response->redirect(); // this will automatically forward the customer
             } else {
                 // not successful
                 return $response->getMessage();
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
-  
+
     public function payment_success(Request $request)
     {
         // Once the transaction has been approved, we need to complete it.
-        if ($request->input('paymentId') && $request->input('PayerID'))
-        {
+        if ($request->input('paymentId') && $request->input('PayerID')) {
             $transaction = $this->gateway->completePurchase(array(
                 'payer_id'             => $request->input('PayerID'),
                 'transactionReference' => $request->input('paymentId'),
             ));
             $response = $transaction->send();
-          
-            if ($response->isSuccessful())
-            {
+
+            if ($response->isSuccessful()) {
                 // The customer has successfully paid.
                 $arr_body = $response->getData();
-          
+
                 // Insert transaction data into the database
                 $isPaymentExist = Payment::where('payment_id', $arr_body['id'])->first();
-          
-                if(!$isPaymentExist)
-                {
+
+                if (!$isPaymentExist) {
                     $payment = new Payment;
                     $payment->payment_id = $arr_body['id'];
                     $payment->payer_id = $arr_body['payer']['payer_info']['payer_id'];
@@ -98,8 +95,8 @@ class PaymentController extends Controller
                     $depot->amount = $payment->amount;
                     $depot->save();
                 }
-          
-                return "Payment is successful. Your transaction id is: ". $arr_body['id'];
+
+                return "Payment is successful. Your transaction id is: " . $arr_body['id'];
             } else {
                 return $response->getMessage();
             }
@@ -107,7 +104,7 @@ class PaymentController extends Controller
             return 'Transaction is declined';
         }
     }
-  
+
     public function payment_error()
     {
         return 'User is canceled the payment.';
