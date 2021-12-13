@@ -14,9 +14,9 @@ class AddPostalToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->string('postal_adress');    
-            $table->text('compl_adress');    
-            $table->string('postal_code');    
+            $table->string('postal_adress')->nullable();
+            $table->text('compl_adress')->nullable();
+            $table->string('postal_code')->nullable();
         });
     }
 
@@ -28,9 +28,9 @@ class AddPostalToPlayers extends Migration
     public function down()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->dropColumn('postal_adress');    
-            $table->dropColumn('compl_adress');    
-            $table->dropColumn('postal_code');    
+            $table->dropColumn('postal_adress');
+            $table->dropColumn('compl_adress');
+            $table->dropColumn('postal_code');
         });
     }
 }

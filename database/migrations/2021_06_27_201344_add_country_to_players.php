@@ -14,7 +14,7 @@ class AddCountryToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->string('country');
+            $table->string('country')->nullable();
         });
     }
 

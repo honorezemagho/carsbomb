@@ -14,7 +14,7 @@ class AddIsOnlineToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->boolean('online');
+            $table->boolean('online')->default(false);
         });
     }
 

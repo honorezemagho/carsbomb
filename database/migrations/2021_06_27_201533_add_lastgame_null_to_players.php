@@ -14,7 +14,7 @@ class AddLastgameNullToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->string('lastgame')->default(null)->change();
+            $table->string('lastgame')->nullable()->change();
         });
     }
 

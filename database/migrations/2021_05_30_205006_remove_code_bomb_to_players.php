@@ -14,7 +14,7 @@ class RemoveCodeBombToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->dropColumn('Code bomb');
+            $table->dropColumn('Codebomb');
         });
     }
 

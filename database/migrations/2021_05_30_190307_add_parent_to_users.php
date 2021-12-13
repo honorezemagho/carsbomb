@@ -14,7 +14,7 @@ class AddParentToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('parent');
+            $table->integer('parent')->nullable();
         });
     }
 

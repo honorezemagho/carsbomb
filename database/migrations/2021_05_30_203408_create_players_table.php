@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreatePlayersTable extends Migration
 {
@@ -17,19 +18,19 @@ class CreatePlayersTable extends Migration
             $table->id();
             $table->string('firstname');
             $table->string('lastname');
-            $table->integer('lastgame');
-            $table->string('servers');
+            $table->integer('lastgame')->nullable();
+            $table->string('servers')->nullable();
             $table->date('birthday');
-            $table->string('adress');
-            $table->string('pseudo');
+            $table->string('adress')->nullable();
+            $table->string('pseudo')->nullable();
             $table->string('image');
             $table->string('Codebomb');
-            $table->integer('parent');
+            $table->integer('parent')->nullable();
             $table->integer('boost_register');
             $table->integer('boost_parent');
-            $table->string('identity');
-            $table->string('rib');
-            $table->string('rib_str');
+            $table->string('identity')->nullable();
+            $table->string('rib')->nullable();
+            $table->string('rib_str')->nullable();
             $table->integer('status');
             $table->double('solde');
             $table->integer('type');

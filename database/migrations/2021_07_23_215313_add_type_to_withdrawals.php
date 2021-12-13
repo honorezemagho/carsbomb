@@ -14,7 +14,7 @@ class AddTypeToWithdrawals extends Migration
     public function up()
     {
         Schema::table('withdrawals', function (Blueprint $table) {
-            $table->integer('state');
+            $table->integer('state')->default(0);
         });
     }
 
@@ -26,7 +26,7 @@ class AddTypeToWithdrawals extends Migration
     public function down()
     {
         Schema::table('withdrawals', function (Blueprint $table) {
-            $table->dropColumn('state'); 
+            $table->dropColumn('state');
         });
     }
 }

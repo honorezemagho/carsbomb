@@ -14,8 +14,8 @@ class AddIdentitiesToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->string('card1');
-            $table->string('card2');
+            $table->string('card1')->nullable();
+            $table->string('card2')->nullable();
         });
     }
 
