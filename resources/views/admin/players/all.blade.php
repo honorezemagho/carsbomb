@@ -1,20 +1,18 @@
-<?php 
-
-$page = 'joueurs';
+@php
+    $page = 'joueurs';
 $title = 'Tous  les joueurs';
 
 $i = 0;
 
 $type = ['Joueur réel', 'Joueur fictif'];
 $status = [
-  ACCOUNT_WAITING => 'En attente de validation', 
-  ACCOUNT_REFUSED => 'Refusé', 
+  ACCOUNT_WAITING => 'En attente de validation',
+  ACCOUNT_REFUSED => 'Refusé',
   ACCOUNT_VALIDATED => 'Validé'
 ];
 
 $status_color = 'black'
-
-?>
+@endphp
 
 @extends('admin.layout.main')
 
@@ -22,7 +20,7 @@ $status_color = 'black'
 <div class="row" id="proBanner">
     <div class="col-12">
       <span class="d-flex align-items-center purchase-popup">
-        <p></p>       
+        <p></p>
         <a href="#" class="btn btn-inverse-primary btn-fw ml-auto"><i class="mdi mdi-plus "></i> Nouveau joueur</a>
       </span>
     </div>
@@ -76,7 +74,7 @@ $status_color = 'black'
                 <th> Filleuls </th>
                 <th> Parrain </th>
                 <th> Boost inscription activé </th>
-                <th> Boost parrainage activé  </th>                
+                <th> Boost parrainage activé  </th>
                 <th> Status </th>
                 <th> Dépôts </th>
                 <th> Retraits </th>
@@ -90,12 +88,12 @@ $status_color = 'black'
                 @foreach ($players as $player)
 
                 @php
-                  $i++;   
+                  $i++;
                 @endphp
-                
+
                 <tr>
                   <td> {{ $i }} </td>
-                  @if ($player->image == null) 
+                  @if ($player->image == null)
                   <td> <img src="{{ asset('assets/images/profile.jpg') }}" alt="{{ $player->pseudo }}"></td>
                   @else
                   <td> <img src="{{ asset('assets/images/players/' . $player->image) }}" alt="{{ $player->pseudo }}"></td>
@@ -117,22 +115,22 @@ $status_color = 'black'
                   <td> {{ /*boot_parents[$player->id] ? 'Oui':*/ 'Non' }} </td>
 
                   @php
-                      if ($player->status == ACCOUNT_VALIDATED) {
+                      if ($player->status ==  config('app.status.ACCOUNT_VALIDATED')) {
                         $status_color = 'green';
-                      } elseif ($player->status == ACCOUNT_REFUSED) {
+                      } elseif ($player->status == config('app.status.ACCOUNT_REFUSED') ) {
                         $status_color = 'red';
-                      } elseif ($player->status == ACCOUNT_WAITING){
+                      } elseif ($player->status == config('app.status.ACCOUNT_WAITING') ){
                         $status_color = 'yellow';
                       }
                   @endphp
-                  
+
                   <td style="color: {{ $status_color }} "> {{ $status[$player->status] }} </td>
                   <td> {{ ($depots[$player->id] ?? '0') . ' €' }} </td>
                   <td> {{ ($retraits[$player->id] ?? '0') . ' €' }} </td>
                   <td> {{ ($wins[$player->id] ?? '0') . ' €' }} </td>
                   <td> {{ ($looses[$player->id] ?? '0') . ' €' }} </td>
                   <td> {{ ($soldes[$player->id] ?? '0') . ' €' }} </td>
-                  <td>    
+                  <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <form action="{{ route('player.delete', ['id' => $player->id]) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce joueur ? Toute suppression d\'un joueur est définitive et cette dernière est supprimée de la base de données')" method="POST">
                       <input type="hidden" name="_method" value="DELETE">
@@ -146,10 +144,10 @@ $status_color = 'black'
                     @if ($player->status == ACCOUNT_WAITING)
                       <a href="{{ route('player.validate', ['player' => $player->id]) }}"  onclick="return confirm('Êtes-vous sûr de vouloir valider ce compte ?')" title="validate" class="btn btn-outline-success">
                         Valider
-                      </a>  
+                      </a>
                       <a href="{{ route('player.not.validate', ['player' => $player->id]) }}"  onclick="return confirm('Êtes-vous sûr de vouloir réfuser la valider de ce compte ?')" title="validate" class="btn btn-outline-info">
                         Refuser la validation
-                      </a>  
+                      </a>
                     @endif
                     </div>
                   </td>

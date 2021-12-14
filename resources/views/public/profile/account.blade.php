@@ -159,7 +159,7 @@
                                     <p>
                                         <a href="{{ route('public.server.find') }}" class="btn btn-primary">Chercher un serveur</a>
                                     </p>
-                                    <p style="margin-left: 10px;"> 
+                                    <p style="margin-left: 10px;">
                                         <a href="{{ route('public.server.new') }}" class="btn btn-primary">Créer un serveur</a>
                                     </p>
                                 </div>
@@ -169,7 +169,7 @@
                     <div class="contents bio active" id="bio-content">
                         <div class="tab-contents">
                             <div class="row">
-                                @if ($player->status == ACCOUNT_WAITING)
+                                @if ($player->status == config('app.status.ACCOUNT_WAITING') )
                                     @if ($hascards)
                                         <div class="alert alert-info">
                                             <b>Votre compte est en attente de validation</b><br>
@@ -177,19 +177,19 @@
                                             <b>Votre compte est en cours de validation</b><br>
                                             Merci d'avoir envoyé vos pièces administratives.
                                         </div>
-                                    @else  
+                                    @else
                                         <div class="alert alert-warning">
                                             <b>Votre compte est en attente de validation</b><br>
                                             Veuillez envoyer vos pièces administratives
                                         </div>
                                     @endif
-                                @elseif ($player->status == ACCOUNT_VALIDATED)
-                                    
+                                @elseif ($player->status ==  config('app.status.ACCOUNT_VALIDATED'))
+
                                 <div class="alert alert-success">
                                      <b>Votre compte est validé</b><br>
                                     Merci de nous avoir fait confiance
                                 </div>
-                                @elseif ($player->status == ACCOUNT_REFUSED)
+                                @elseif ($player->status == config('app.status.ACCOUNT_REFUSED'))
                                 <div class="alert alert-danger">
                                      <b>Votre compte est réfusé</b><br>
                                 </div>
@@ -256,13 +256,13 @@
                                     @if (Session::get('code_error') != null)
                                     <div class="alert alert-danger" style="display: flex; justify-content: space-between">
                                         <span>{{ Session::get('code_error') }}</span>
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
-                                    @endif                                    
+                                    @endif
                                     @if (Session::get('code_success') != null)
                                     <div class="alert alert-success" style="display: flex; justify-content: space-between">
                                         <span>{{ Session::get('code_success') }}</span>
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                     @endif
                                     <form action="{{ route('public.code.use') }}" method="POST">
@@ -299,7 +299,7 @@
                                                     <td>{{ $bomb->value }}%</td>
                                                     @if (\Carbon\Carbon::createFromDate($bomb->end)->gte(Carbon\Carbon::now()))
                                                         <td> <b class="text-success">En cours</b> </td>
-                                                    @else    
+                                                    @else
                                                         <td> <b class="text-danger">Expiré</b> </td>
                                                     @endif
                                                 </tr>
@@ -390,22 +390,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     <script src="{{ asset('js/tabs.js') }}"></script>
-    <script> 
-        function validate_files() { 
-            var card1_file = $('#card1_input').val(); 
-            var card2_file = $('#card2_input').val(); 
-            var rib_file = $('#rib_input').val(); 
+    <script>
+        function validate_files() {
+            var card1_file = $('#card1_input').val();
+            var card2_file = $('#card2_input').val();
+            var rib_file = $('#rib_input').val();
 
-            var allowedExtensions = 
+            var allowedExtensions =
                     /(\.jpg|\.jpeg|\.png)$/i;
             var error = 0;
 
-            if (card1_file=="") {  
-                $("#error_card1").html("Veuillez ajouter le recto de votre pièce d'identité ici");      
+            if (card1_file=="") {
+                $("#error_card1").html("Veuillez ajouter le recto de votre pièce d'identité ici");
                 error++
             } else {
                 if (!allowedExtensions.exec(card1_file)) {
-                    $("#error_card1").html("Veuillez placer une image valide (.jpg, .jpeg ou .png)");      
+                    $("#error_card1").html("Veuillez placer une image valide (.jpg, .jpeg ou .png)");
                     card1_file.value = '';
                     error++
                 } else {
@@ -413,12 +413,12 @@
                 }
             }
 
-            if (card2_file=="") {  
-                $("#error_card2").html("Veuillez ajouter le verso de votre pièce d'identité ici");    
+            if (card2_file=="") {
+                $("#error_card2").html("Veuillez ajouter le verso de votre pièce d'identité ici");
                 error++
             } else  {
                 if (!allowedExtensions.exec(card2_file)) {
-                    $("#error_card2").html("Veuillez placer une image valide (.jpg, .jpeg ou .png)");      
+                    $("#error_card2").html("Veuillez placer une image valide (.jpg, .jpeg ou .png)");
                     card1_file.value = '';
                     error++
                 } else {
@@ -426,16 +426,16 @@
                 }
             }
 
-            if (rib_file=="") {  
-                $("#error_rib").html("Veuillez ajouter votre RIB ici");     
+            if (rib_file=="") {
+                $("#error_rib").html("Veuillez ajouter votre RIB ici");
                 error++
             } else {
                 if (!allowedExtensions.exec(rib_file)) {
-                    $("#error_rib").html("Veuillez placer une image valide (.jpg, .jpeg ou .png)");      
+                    $("#error_rib").html("Veuillez placer une image valide (.jpg, .jpeg ou .png)");
                     card1_file.value = '';
                     error++
                 } else {
-                    $("#error_rib").html("")  
+                    $("#error_rib").html("")
                 }
             }
 
@@ -444,9 +444,9 @@
             } else {
                 $('#cards_form').submit();
             }
-            
-        }  
-    </script> 
+
+        }
+    </script>
     <script src="{{ asset('js/prev.js') }}"></script>
 </body>
 </html>

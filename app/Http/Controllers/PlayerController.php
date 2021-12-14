@@ -213,7 +213,7 @@ class PlayerController extends Controller
     public function validate_account(Request $request)
     {
         $player = player::find($request->player);
-        $player->status = \ACCOUNT_VALIDATED;
+        $player->status = config('app.status.ACCOUNT_VALIDATED');
         $player->save();
         return redirect()->back()->with('validated', 'Compte validé avec succès !');
     }
@@ -221,7 +221,7 @@ class PlayerController extends Controller
     public function not_validate_account(Request $request)
     {
         $player = player::find($request->player);
-        $player->status = \ACCOUNT_REFUSED;
+        $player->status = config('app.status.ACCOUNT_REFUSED');
         $player->save();
         return redirect()->back()->with('validated', 'Compte réfusé avec succès !');
     }
