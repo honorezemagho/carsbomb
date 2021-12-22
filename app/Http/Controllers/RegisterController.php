@@ -27,6 +27,7 @@ class RegisterController extends Controller
             'postal_code' => 'required',
             'major' => 'accepted',
             'cgu' => 'accepted',
+            'parent' => 'nullable|exists:players,id'
             /*'image' => 'image',
             'card1' => 'image',
             'card2' => 'image',
