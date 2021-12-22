@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 class RegisterController extends Controller
 {
 
-    public const ACCOUNT_WAITING = 0;
+    public const ACCOUNT_WAITING = 1;
     public function register(Request $request)
     {
         $validated = $request->validate([

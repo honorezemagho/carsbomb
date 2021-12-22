@@ -27,9 +27,9 @@ return [
     */
 
     'status' => [
-        'ACCOUNT_WAITING' => 0,
-        'ACCOUNT_VALIDATED' => 1,
-        'ACCOUNT_REFUSED' => 2
+        'ACCOUNT_WAITING' => 1,
+        'ACCOUNT_VALIDATED' => 2,
+        'ACCOUNT_REFUSED' => 3
     ],
 
     /*
