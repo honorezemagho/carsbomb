@@ -7,8 +7,8 @@ $i = 0;
 $type = ['Joueur réel', 'Joueur fictif'];
 $status = [
     1 => 'En attente de validation',
-    2 => 'Refusé',
-    3 => 'Validé'
+    2 => 'Validé',
+    3 => 'Refusé'
 ];
 
 $status_color = 'black';

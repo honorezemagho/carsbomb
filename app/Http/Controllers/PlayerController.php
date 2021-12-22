@@ -67,7 +67,7 @@ class PlayerController extends Controller
                 $used_codes[$player->id] = $code_exist;
             }
 
-            $childs_arr = player::where('parent', $player->username)->get();
+            $childs_arr = player::where('parent', $player->id)->get();
 
             $boot_parent = false;
 
